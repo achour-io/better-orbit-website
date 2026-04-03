@@ -243,9 +243,9 @@ export default function ArtemisTracker() {
     scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1, vertexColors: true, transparent: true, opacity: 0.8, depthWrite: false })));
 
     const tl = new THREE.TextureLoader();
-    const earthDay = tl.load("/2k_earth_daymap.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
-    const earthNight = tl.load("/2k_earth_nightmap.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
-    const earthNorm = tl.load("/2k_earth_normal_map.tif"); const earthSpec = tl.load("/2k_earth_specular_map.tif"); const earthCloud = tl.load("/2k_earth_clouds.jpg");
+    const earthDay = tl.load("/earth/2k_earth_daymap.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
+    const earthNight = tl.load("/earth/2k_earth_nightmap.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
+    const earthNorm = tl.load("/earth/2k_earth_normal_map.tif"); const earthSpec = tl.load("/earth/2k_earth_specular_map.tif"); const earthCloud = tl.load("/earth/2k_earth_clouds.jpg");
     const earthMaterial = new THREE.ShaderMaterial({
       uniforms: { dayTexture: { value: earthDay }, nightTexture: { value: earthNight }, normalMap: { value: earthNorm }, specMap: { value: earthSpec }, sunDirection: { value: new THREE.Vector3(1, 0, 0) } },
       vertexShader: `varying vec3 vNormal; varying vec2 vUv; void main(){ vNormal = normalize(mat3(modelMatrix)*normal); vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
@@ -255,14 +255,14 @@ export default function ArtemisTracker() {
     scene.add(earth); earthRef.current = earth;
     const earthClouds = new THREE.Mesh(new THREE.SphereGeometry(EARTH_VISUAL_RADIUS * 1.012, 96, 96), new THREE.MeshPhongMaterial({ map: earthCloud, alphaMap: earthCloud, transparent: true, opacity: 0.85, depthWrite: false, emissive: 0x333333, emissiveIntensity: 0.4 }));
     scene.add(earthClouds); earthCloudsRef.current = earthClouds;
-    const moonTex = tl.load("/2k_moon.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
+    const moonTex = tl.load("/moon/2k_moon.jpg", t => t.colorSpace = THREE.SRGBColorSpace);
     const moon = new THREE.Mesh(new THREE.SphereGeometry(MOON_VISUAL_RADIUS, 64, 64), new THREE.MeshPhongMaterial({ map: moonTex, shininess: 4 }));
     scene.add(moon); moonRef.current = moon;
     const sun = new THREE.Mesh(new THREE.SphereGeometry(SUN_VISUAL_RADIUS, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffdd44, toneMapped: false }));
     scene.add(sun); sunRef.current = sun;
 
     const craftGroup = new THREE.Group(); scene.add(craftGroup); integrityGroupRef.current = craftGroup;
-    new FBXLoader().load("/integrity.fbx", fbx => {
+    new FBXLoader().load("/integrity/integrity.fbx", fbx => {
       const box = new THREE.Box3().setFromObject(fbx); const size = box.getSize(new THREE.Vector3()); const sf = INTEGRITY_VISUAL_SIZE / (Math.max(size.x, size.y, size.z) || 1); fbx.scale.setScalar(sf); fbx.position.sub(box.getCenter(new THREE.Vector3()).multiplyScalar(sf));
       forceOpaqueMaterials(fbx); craftGroup.add(fbx); integrityModelRef.current = fbx;
     }, undefined, () => craftGroup.add(new THREE.Mesh(new THREE.BoxGeometry(INTEGRITY_VISUAL_SIZE, INTEGRITY_VISUAL_SIZE * 0.35, INTEGRITY_VISUAL_SIZE * 0.6), new THREE.MeshBasicMaterial({ color: 0xff4444 }))));
