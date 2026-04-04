@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+import { Analytics } from "@vercel/analytics/react";
 
 // ─── UNIT CONVERSIONS ─────────────────────────────────────────────────────────
 const KM_TO_MILES = 0.621371;
@@ -480,6 +481,7 @@ export default function ArtemisTracker() {
       </div>
       {error && <div className="absolute top-10 right-10 pointer-events-none"><div className="rounded-full border border-orange-500/30 bg-orange-950/40 px-5 py-2 text-[9px] font-bold uppercase text-orange-200 backdrop-blur-xl shadow-2xl">{error}</div></div>}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ zIndex: 5, background: 'linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06))', backgroundSize: '100% 2px, 3px 100%' }} />
+      <Analytics />
     </div>
   );
 }
