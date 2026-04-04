@@ -309,7 +309,7 @@ export default function ArtemisTracker() {
         const vx = parseFloat(json.Parameter_2009?.Value), vy = parseFloat(json.Parameter_2010?.Value), vz = parseFloat(json.Parameter_2011?.Value);
         lastTelemetryTimeRef.current = Date.now();
         const ck = new THREE.Vector3(px * FT_TO_KM, py * FT_TO_KM, pz * FT_TO_KM); craftTruthKmRef.current.copy(ck);
-        setEarthDistanceKm(vectorMagnitude(px, py, pz) * FT_TO_KM); setSpeedFtps(vectorMagnitude(vx, vy, vz)); setMoonDistanceKm(moonPosKm(new Date()).distanceTo(ck)); setMissionClock(fmt_tplus(new Date()));
+        setEarthDistanceKm(Math.max(0, vectorMagnitude(px, py, pz) * FT_TO_KM - 6371)); setSpeedFtps(vectorMagnitude(vx, vy, vz)); setMoonDistanceKm(Math.max(0, moonPosKm(new Date()).distanceTo(ck) - 1737)); setMissionClock(fmt_tplus(new Date()));
         setTelemetryReady(true); setStatus("LIVE TELEMETRY"); setError("");
       } catch (e) { if (!cancelled && (Date.now() - lastTelemetryTimeRef.current > 5000)) { setStatus("CONNECTION INTERRUPTED"); setError(e.message); } }
     };
